@@ -1,11 +1,11 @@
 //css
-import './App.css'
+import './App.css';
 
 // react 
-import { useCallback, useEffect, useState } from 'react'
+import { useCallback, useEffect, useState } from 'react';
 
 //data
-import {wordsList} from "./data/word"
+import {wordsList} from "./data/word";
 
 //components
 import StartScreen from './components/StartScreen';
@@ -19,8 +19,8 @@ const stages = [
 ];
 
 function App() {
-  const [gameStage, setGameStage] = useState(stages[0].name);
-  const [words] = useState(wordsList);
+const [gameStage, setGameStage] = useState(stages[0].name);
+const [words] = useState(wordsList);
 
 const [pickedWord, setPickedWord] = useState("")
 const [pickedCategory, setPickedCategory] = useState("")
@@ -42,15 +42,16 @@ const pickWordAndCategory = useCallback(() => {
 
   return { word, category }; // Agora a função retorna os valores
 }, [words]);
-  // starts
-  const startGame = useCallback(() => {
+
+const startGame = useCallback(() => {
     clearLetterStates();
 
     const {word, category} = pickWordAndCategory();
 
+
     //create an array of letters 
     let wordLetters: string[] = word.split("")
-    wordLetters = wordLetters.map((letters) => letters.toLowerCase())
+    wordLetters = wordLetters.map((l) => l.toLowerCase())
 
 
     //fill states
@@ -76,7 +77,7 @@ const pickWordAndCategory = useCallback(() => {
         if(letters.includes(normalizedLetter)){
           setGuessedLetters((actualGuessedLetters) => [
             ...actualGuessedLetters,
-            normalizedLetter,
+            letter,
           ])
         } else {
            setWrongLetters((actualWrongLetters) => [
@@ -88,32 +89,6 @@ const pickWordAndCategory = useCallback(() => {
         }
   };
 
-const clearLetterStates = (): void => {
-  setGuessedLetters([]);
-  setWrongLetters([]);
-};
-
-
-//check defeat
-  useEffect(() => {
-    if(guesses <= 0){
-      clearLetterStates()
-
-      setGameStage(stages[2].name)
-    }
-  }, [guesses, letters, startGame]);
-
-  //cheack win
-useEffect(() => {
-    const uniqueLetters = [... new Set(letters)]
-
-    if(guessedLetters.length === uniqueLetters.length) {
-      setScore((actualScore) => actualScore += 100)
-      //
-      startGame()
-    }
-  }, [guessedLetters]);
-
 
   // restart
   const retry = () => {
@@ -122,10 +97,38 @@ useEffect(() => {
     setGameStage(stages[0].name);
   }
 
+  const clearLetterStates = (): void => {
+  setGuessedLetters([]);
+  setWrongLetters([]);
+}
+
+
+ useEffect(() => {
+    if(guesses === 0){
+      clearLetterStates()
+
+      setGameStage(stages[2].name)
+    }
+  }, [guesses]);
+
+
+ //cheack win
+useEffect(() => {
+  const uniqueLetters = [...new Set(letters)];
+
+  // só checar vitória se tiver letras no jogo
+  if (letters.length > 0 && guessedLetters.length === uniqueLetters.length) {
+    setScore((actualScore) => actualScore + 100);
+    startGame();
+  }
+}, [guessedLetters, letters, startGame]);
+
+
+
   return (
     <div className='App'>
      {gameStage === "start" && <StartScreen startGame={startGame}/>} 
-     {gameStage === "game" && <Game 
+     {gameStage === "game" && <Game
      verifyLetter={verifyLetter} 
      pickedWord={pickedWord}
      pickedCategory={pickedCategory}
