@@ -9,7 +9,7 @@ import {wordsList} from "./data/word"
 
 //components
 import StartScreen from './components/StartScreen';
-import Game from './components/game';
+import Game from './components/Game';
 import GameOver from './components/GameOver';
 
 const stages = [

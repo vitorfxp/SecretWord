@@ -13,7 +13,7 @@ type verify = {
 }
 
 
-const Game = ({verifyLetter, pickedWord, pickedCategory,letters,guessedLetters,wrongLetters,guesses,score }: verify) => {
+const Game = ({verifyLetter, pickedCategory,letters,guessedLetters,wrongLetters,guesses,score }: verify) => {
     const [letter,setLetter] = useState("")
     const letterInputRef = useRef<HTMLInputElement>(null)
 
